@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="khungChinh" alignment="CENTER" prefHeight="700.0" prefWidth="1000.0" spacing="15.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.cinemamanagementsystem.Khach_ThanhToanController">
+   <children>
+      <Label text="XÁC NHẬN &amp; THANH TOÁN" textFill="#4ecc00">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </Label>
+
+      <VBox maxWidth="450.0" spacing="10.0" style="-fx-border-color: #aaaaaa; -fx-border-radius: 10; -fx-background-radius: 10; -fx-background-color: #f9f9f9;">
+         <children>
+            <Label text="THÔNG TIN HÓA ĐƠN">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="lblPhim" text="- Phim: (Dữ liệu phim sẽ truyền vào đây)" />
+            <Label fx:id="lblGioChieu" text="- Giờ chiếu: (Dữ liệu giờ chiếu)" />
+            <Label fx:id="lblGhe" text="- Ghế đã chọn: (Dữ liệu ghế)" />
+            <Label fx:id="lblBapNuoc" text="- Bắp nước: (Dữ liệu bắp nước)" />
+            <Label fx:id="lblTongTien" text="TỔNG CỘNG: 0 đ" textFill="#e74c3c">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+
+      <Label text="Chọn phương thức thanh toán:" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="15.0" />
+         </VBox.margin>
+      </Label>
+
+      <RadioButton mnemonicParsing="false" selected="true" text="Tiền mặt tại quầy" textFill="WHITE">
+         <toggleGroup>
+            <ToggleGroup fx:id="phuongThucThanhToan" />
+         </toggleGroup>
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </RadioButton>
+      <RadioButton mnemonicParsing="false" text="Chuyển khoản / Quét mã QR" textFill="WHITE" toggleGroup="$phuongThucThanhToan">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </RadioButton>
+
+      <HBox alignment="CENTER" spacing="20.0">
+         <VBox.margin>
+            <Insets top="30.0" />
+         </VBox.margin>
+         <children>
+            <Button mnemonicParsing="false" onAction="#quayLaiTrangTruoc" style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="&lt; QUAY LẠI">
+               <padding>
+                  <Insets bottom="12.0" left="30.0" right="30.0" top="12.0" />
+               </padding>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            
+            <Button mnemonicParsing="false" onAction="#xuLyThanhToan" style="-fx-background-color: green; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="XÁC NHẬN THANH TOÁN">
+               <padding>
+                  <Insets bottom="12.0" left="30.0" right="30.0" top="12.0" />
+               </padding>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>
