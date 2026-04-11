@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.cinemamanagementsystem.Khach_ChonPhimController">
+   <children>
+      
+    <ImageView 
+        fitHeight="700.0" 
+        fitWidth="1200.0" 
+        pickOnBounds="true" 
+        preserveRatio="false" 
+        smooth="true">
+        <image>
+            <Image url="https://images.unsplash.com/photo-1595769816263-9b910be24d5f?w=1200&amp;h=700&amp;fit=crop" />
+        </image>
+    </ImageView>
+
+      <VBox opacity="0.6" style="-fx-background-color: black;" />
+
+      <BorderPane prefHeight="700.0" prefWidth="1000.0">
+         <top>
+            <StackPane BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets bottom="10.0" left="30.0" right="30.0" top="20.0" />
+               </BorderPane.margin>
+               <children>
+                  <Label text="PHIM ĐANG CHIẾU" textFill="WHITE" StackPane.alignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="35.0" />
+                     </font>
+                  </Label>
+                  <Button mnemonicParsing="false" onAction="#handleDangXuat" prefHeight="40.0" prefWidth="110.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;" text="Đăng xuất" StackPane.alignment="CENTER_RIGHT">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </StackPane>
+         </top>
+         <center>
+            <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" BorderPane.alignment="CENTER">
+               <content>
+                  <FlowPane fx:id="phimContainer" alignment="CENTER" hgap="25.0" vgap="25.0" style="-fx-background-color: transparent;">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                  </FlowPane>
+               </content>
+            </ScrollPane>
+         </center>
+      </BorderPane>
+   </children>
+</StackPane>
