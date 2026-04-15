@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="CinemaManagement.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3247"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="Chi_Tiet_Hoa_Don_SP" custom_title="0" dock_id="1" table="4,19:mainChi_Tiet_Hoa_Don_SP"/><dock_state state="000000ff00000000fd00000001000000020000000000000000fc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000011300ffffff000000000000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">-- Kích hoạt tính năng Khóa ngoại (Foreign Key) cho SQLite
+PRAGMA foreign_keys = ON;
+
+-- =========================================================================
+-- 1. XÓA BẢNG CŨ NẾU ĐÃ TỒN TẠI (Thứ tự từ con đến cha)
+-- =========================================================================
+DROP TABLE IF EXISTS DanhGia;
+DROP TABLE IF EXISTS Phim_TheLoai;
+DROP TABLE IF EXISTS Phim_DienVien;
+DROP TABLE IF EXISTS Phim_DaoDien;
+DROP TABLE IF EXISTS Trang_Thai_Ghe;
+DROP TABLE IF EXISTS Lich_Su_Thanh_Toan;
+DROP TABLE IF EXISTS Chi_Tiet_Hoa_Don_SP;
+DROP TABLE IF EXISTS Ve;
+DROP TABLE IF EXISTS Hoa_Don;
+DROP TABLE IF EXISTS San_Pham;
+DROP TABLE IF EXISTS Khuyen_Mai;
+DROP TABLE IF EXISTS Dao_Dien;
+DROP TABLE IF EXISTS Dien_Vien;
+DROP TABLE IF EXISTS The_Loai;
+DROP TABLE IF EXISTS Ghe;
+DROP TABLE IF EXISTS Suat_Chieu;
+DROP TABLE IF EXISTS Khach_Hang;
+DROP TABLE IF EXISTS Phong_Chieu;
+DROP TABLE IF EXISTS Phim;
+DROP TABLE IF EXISTS Nhan_Vien;
+
+-- =========================================================================
+-- 2. TẠO CẤU TRÚC BẢNG (CHUẨN SQLITE)
+-- =========================================================================
+
+CREATE TABLE Nhan_Vien (
+    Ma_NV INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ho_Ten TEXT NOT NULL,
+    Ngay_Sinh DATE,
+    SDT TEXT,
+    Ten_Dang_Nhap TEXT UNIQUE NOT NULL,
+    Mat_Khau TEXT NOT NULL, 
+    Vai_Tro TEXT DEFAULT 'Nhân viên'
+);
+
+CREATE TABLE Khach_Hang (
+    Ma_KH INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ho_Ten TEXT NOT NULL,
+    Ngay_Sinh DATE,
+    Ten_Dang_Nhap TEXT UNIQUE NOT NULL, 
+    Mat_Khau TEXT NOT NULL,            
+    SDT TEXT UNIQUE,
+    Email TEXT,
+    Diem_Tich_Luy INTEGER DEFAULT 0
+);
+
+CREATE TABLE The_Loai (
+    Ma_The_Loai INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ten_The_Loai TEXT NOT NULL
+);
+
+CREATE TABLE Dien_Vien (
+    Ma_Dien_Vien INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ten_Dien_Vien TEXT NOT NULL,
+    Anh_Dien_Vien TEXT
+);
+
+CREATE TABLE Dao_Dien (
+    Ma_Dao_Dien INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ten_Dao_Dien TEXT NOT NULL,
+    Anh_Dao_Dien TEXT
+);
+
+CREATE TABLE Khuyen_Mai (
+    Ma_Khuyen_Mai INTEGER PRIMARY KEY AUTOINCREMENT,
+    Loai_Giam_Gia TEXT,
+    Gia_Tri_Giam REAL,
+    Giam_Toi_Da REAL,
+    Don_Tien_Toi_Thieu REAL,
+    So_Luong_Toi_Da INTEGER,
+    Ngay_Bat_Dau DATE,
+    Ngay_Ket_Thuc DATE
+);
+
+CREATE TABLE San_Pham (
+    Ma_San_Pham INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ten_San_Pham TEXT NOT NULL,
+    Don_Gia REAL NOT NULL
+);
+
+CREATE TABLE Phim (
+    Ma_Phim INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ten_Phim TEXT NOT NULL,
+    The_Loai TEXT, 
+    Thoi_Luong INTEGER,
+    Ngay_Khoi_Chieu DATE,
+    Ngon_Ngu TEXT,
+    Trailer TEXT,
+    Rated TEXT,
+    Mo_Ta TEXT,
+    Anh_Bia TEXT 
+);
+
+CREATE TABLE DanhGia (
+    Ma_DanhGia INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ma_Phim INTEGER REFERENCES Phim(Ma_Phim) ON DELETE CASCADE,
+    Ten_Nguoi_Dung TEXT,
+    Noi_Dung TEXT NOT NULL,
+    Ngay_Danh_Gia DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Phim_TheLoai (
+    Ma_Phim INTEGER REFERENCES Phim(Ma_Phim) ON DELETE CASCADE,
+    Ma_The_Loai INTEGER REFERENCES The_Loai(Ma_The_Loai) ON DELETE CASCADE,
+    PRIMARY KEY (Ma_Phim, Ma_The_Loai)
+);
+
+CREATE TABLE Phim_DienVien (
+    Ma_Phim INTEGER REFERENCES Phim(Ma_Phim) ON DELETE CASCADE,
+    Ma_Dien_Vien INTEGER REFERENCES Dien_Vien(Ma_Dien_Vien) ON DELETE CASCADE,
+    PRIMARY KEY (Ma_Phim, Ma_Dien_Vien)
+);
+
+CREATE TABLE Phim_DaoDien (
+    Ma_Phim INTEGER REFERENCES Phim(Ma_Phim) ON DELETE CASCADE,
+    Ma_Dao_Dien INTEGER REFERENCES Dao_Dien(Ma_Dao_Dien) ON DELETE CASCADE,
+    PRIMARY KEY (Ma_Phim, Ma_Dao_Dien)
+);
+
+CREATE TABLE Phong_Chieu (
+    Ma_Phong INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ten_Phong TEXT NOT NULL,
+    Loai_Phong TEXT DEFAULT 'Tiêu chuẩn',
+    Tong_So_Ghe INTEGER DEFAULT 0
+);
+
+CREATE TABLE Ghe (
+    Ma_Ghe INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ma_Phong INTEGER REFERENCES Phong_Chieu(Ma_Phong) ON DELETE CASCADE,
+    So_Ghe TEXT NOT NULL, 
+    Loai_Ghe TEXT DEFAULT 'Thường' 
+);
+
+CREATE TABLE Suat_Chieu (
+    Ma_Suat INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ma_Phim INTEGER REFERENCES Phim(Ma_Phim) ON DELETE CASCADE,
+    Ma_Phong INTEGER REFERENCES Phong_Chieu(Ma_Phong) ON DELETE CASCADE,
+    Thoi_Gian_Bat_Dau DATETIME NOT NULL,
+    Dinh_Dang_Phim TEXT,
+    Ngon_Ngu TEXT,
+    Gia_Ve REAL NOT NULL
+);
+
+CREATE TABLE Trang_Thai_Ghe (
+    Ma_Suat INTEGER REFERENCES Suat_Chieu(Ma_Suat) ON DELETE CASCADE,
+    Ma_Ghe INTEGER REFERENCES Ghe(Ma_Ghe) ON DELETE CASCADE,
+    Trang_Thai TEXT, 
+    PRIMARY KEY (Ma_Suat, Ma_Ghe)
+);
+
+CREATE TABLE Hoa_Don (
+    Ma_Hoa_Don INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ngay_Lap DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Ma_KH INTEGER REFERENCES Khach_Hang(Ma_KH) ON DELETE CASCADE,
+    Ma_NV INTEGER REFERENCES Nhan_Vien(Ma_NV) ON DELETE CASCADE,
+    Ma_Khuyen_Mai INTEGER REFERENCES Khuyen_Mai(Ma_Khuyen_Mai) ON DELETE CASCADE
+);
+
+CREATE TABLE Ve (
+    Ma_Ve INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ma_Suat INTEGER REFERENCES Suat_Chieu(Ma_Suat) ON DELETE CASCADE,
+    Ma_KH INTEGER REFERENCES Khach_Hang(Ma_KH) ON DELETE CASCADE,
+    Ma_NV INTEGER REFERENCES Nhan_Vien(Ma_NV) ON DELETE CASCADE,
+    Ma_Ghe INTEGER REFERENCES Ghe(Ma_Ghe) ON DELETE CASCADE,
+    Ma_Hoa_Don INTEGER REFERENCES Hoa_Don(Ma_Hoa_Don) ON DELETE CASCADE,
+    Thoi_Gian_Dat DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Trang_Thai TEXT DEFAULT 'Đã thanh toán'
+);
+
+CREATE TABLE Chi_Tiet_Hoa_Don_SP (
+    Ma_Hoa_Don INTEGER REFERENCES Hoa_Don(Ma_Hoa_Don) ON DELETE CASCADE,
+    Ma_San_Pham INTEGER REFERENCES San_Pham(Ma_San_Pham) ON DELETE CASCADE,
+    So_Luong INTEGER NOT NULL,
+    Thanh_Tien REAL NOT NULL,
+    PRIMARY KEY (Ma_Hoa_Don, Ma_San_Pham)
+);
+
+CREATE TABLE Lich_Su_Thanh_Toan (
+    Ma_Thanh_Toan INTEGER PRIMARY KEY AUTOINCREMENT,
+    Ma_Hoa_Don INTEGER REFERENCES Hoa_Don(Ma_Hoa_Don) ON DELETE CASCADE,
+    Phuong_Thuc TEXT,
+    So_Tien REAL NOT NULL,
+    Trang_Thai TEXT,
+    Thoi_Gian DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Ghi_Chu TEXT
+);
+
+-- =========================================================================
+-- 3. NẠP DỮ LIỆU MẪU 
+-- =========================================================================
+
+-- 3.1. Nhân viên Admin
+INSERT INTO Nhan_Vien (Ho_Ten, Ten_Dang_Nhap, Mat_Khau, Vai_Tro) VALUES 
+('Admin Hệ Thống', 'admin', '123456', 'Quản lý');
+
+-- 3.2. Khách Hàng 
+INSERT INTO Khach_Hang (Ho_Ten, Ten_Dang_Nhap, Mat_Khau, SDT, Email) VALUES 
+('Nguyễn Tuấn Hành Động', 'kh_action1', '123456', '0900000001', 'a1@gmail.com'),
+('Lê Văn Bom Tấn', 'kh_action2', '123456', '0900000002', 'a2@gmail.com'),
+('Trần Bé Bi', 'kh_kid1', '123456', '0900000003', 'k1@gmail.com'),
+('Phạm Mẹ Bỉm', 'kh_kid2', '123456', '0900000004', 'k2@gmail.com'),
+('Hoàng Lệ Rơi', 'kh_drama1', '123456', '0900000005', 'd1@gmail.com'),
+('Vũ Trái Tim', 'kh_drama2', '123456', '0900000006', 'd2@gmail.com'),
+('Đinh Hù Dọa', 'kh_horror1', '123456', '0900000007', 'h1@gmail.com'),
+('Bùi Sợ Ma', 'kh_horror2', '123456', '0900000008', 'h2@gmail.com'),
+('Ngô Tạp Nham', 'kh_mix1', '123456', '0900000009', 'm1@gmail.com'),
+('Đỗ Tạp Nham', 'kh_mix2', '123456', '0900000010', 'm2@gmail.com');
+
+-- 3.3. 20 BỘ PHIM
+INSERT INTO Phim (Ten_Phim, The_Loai, Thoi_Luong, Ngay_Khoi_Chieu, Mo_Ta, Anh_Bia) VALUES 
+('Godzilla x Kong', 'Hành động, Viễn tưởng', 115, '2024-03-29', 'Hai siêu quái vật huyền thoại Godzilla và Kong tạm gác lại ân oán để cùng nhau đối đầu với một mối đe dọa bí ẩn dưới lòng Trái Đất.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/g/o/godzilla_vs_1_.jpg'),
+('Avengers: Endgame', 'Hành động, Viễn tưởng', 181, '2019-04-26', 'Trận chiến vĩ đại nhất của vũ trụ điện ảnh Marvel. Các siêu anh hùng còn sống sót hợp lực để đảo ngược cú búng tay của Thanos.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/a/4/a4_160.jpg'),
+('Fast &amp; Furious 10', 'Hành động, Đua xe', 141, '2023-05-19', 'Dominic Toretto và gia đình phải đối mặt với một kẻ thù nguy hiểm từ quá khứ, kẻ mang lòng thù hận tột cùng muốn phá hủy tất cả.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/7/0/700x1000-fastx_1.jpg'),
+('Spider-Man: No Way Home', 'Hành động, Siêu anh hùng', 148, '2021-12-17', 'Danh tính bị bại lộ, Peter Parker nhờ Doctor Strange giúp đỡ, nhưng vô tình mở ra đa vũ trụ kéo theo vô số ác nhân.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/s/n/snwh_new_fb1080x1350_1_.jpg'),
+('Doraemon: Bản giao hưởng', 'Hoạt Hình, Gia Đình', 115, '2024-05-24', 'Nobita và nhóm bạn cùng Doraemon dấn thân vào một cuộc phiêu lưu âm nhạc tuyệt diệu để giải cứu hành tinh khỏi sự im lặng.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/d/r/drm24_-_poster.jpg'),
+('Kung Fu Panda 4', 'Hoạt Hình, Hài hước', 94, '2024-03-08', 'Po đối mặt với một pháp sư biến hình tàn ác. Cậu phải tìm người kế vị danh hiệu Thần Long Đại Hiệp và bảo vệ Thung Lũng.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/4/7/470x700-kungfupanda4.jpg'),
+('Inside Out 2', 'Hoạt Hình, Tâm Lý', 100, '2024-06-14', 'Cô bé Riley bước vào tuổi dậy thì, mang theo sự xuất hiện của những cảm xúc mới mẻ và phức tạp, gây đảo lộn thế giới nội tâm.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/1/0/1080x1350-insideout.jpg'),
+('Toy Story 4', 'Hoạt Hình, Phiêu lưu', 100, '2019-06-21', 'Woody, Buzz và những người bạn đồ chơi bắt đầu một chuyến dã ngoại, nơi họ gặp gỡ người bạn mới Forky và hiểu thêm về giá trị bản thân.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/p/o/poster_1_2.jpg'),
+('Mai', 'Tình cảm, Tâm lý', 131, '2024-02-10', 'Câu chuyện chân thực và cảm động về cuộc đời thăng trầm của Mai, một người phụ nữ khao khát tình yêu nhưng đầy rẫy những tổn thương.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/m/a/mai_teaser_poster_digital_1_.jpg'),
+('Titanic', 'Tình cảm, Lãng mạn', 195, '1997-12-19', 'Chuyện tình bi tráng và lãng mạn giữa Jack và Rose trên chuyến tàu định mệnh Titanic trước khi thảm họa chìm tàu xảy ra.', 'https://m.media-amazon.com/images/M/MV5BYzYyN2FiZmUtYWYzMy00MzViLWJkZTMtOGY1ZjgzNWMwN2YxXkEyXkFqcGc@._V1_.jpg'),
+('La La Land', 'Tình cảm, Âm nhạc', 128, '2016-12-09', 'Mối tình tuyệt đẹp nhưng dang dở giữa một nhạc công jazz và một nữ diễn viên trẻ giữa lòng Hollywood hoa lệ.', 'https://lionsgate.brightspotcdn.com/ed/5a/ce8dc04443b286bb3e488fd20c01/la-la-land-movie-bg01-portrait.jpg'),
+('Lật Mặt 7', 'Gia đình, Tâm lý', 138, '2024-04-26', 'Hành trình đầy cảm xúc của một người mẹ già vất vả cùng những đứa con, khắc họa sâu sắc tình cảm gia đình thiêng liêng.', 'https://www.bhdstar.vn/wp-content/uploads/2024/04/referenceSchemeHeadOfficeallowPlaceHoldertrueheight700ldapp-35.jpg'),
+('Exhuma: Quật Mộ', 'Kinh dị, Tâm linh', 134, '2024-02-22', 'Một nhóm pháp sư, thầy phong thủy và nhà thám hiểm cùng nhau khai quật một ngôi mộ bí ẩn, vô tình đánh thức thế lực hắc ám.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/7/0/700x1000_exhuma-min.jpg'),
+('The Conjuring', 'Kinh dị, Ma Quỷ', 112, '2013-07-19', 'Dựa trên câu chuyện có thật về vợ chồng nhà ngoại cảm Warren khi họ đến điều tra những hiện tượng siêu nhiên tại một căn nhà hoang vắng.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/v/n/vn_cjrlr_insta_vert_main_1638x2048_intl.jpg'),
+('IT', 'Kinh dị, Chú hề', 135, '2017-09-08', 'Nhóm bạn nhỏ ở thị trấn Derry phải hợp sức để đối mặt với ác quỷ Pennywise, kẻ chuyên hóa thân thành chú hề để bắt cóc trẻ em.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/i/t/it-2_resize_web_406x600_2.jpg'),
+('Annabelle', 'Kinh dị, Búp bê', 99, '2014-10-03', 'Khởi nguồn của búp bê quỷ ám Annabelle, gieo rắc nỗi kinh hoàng cho một đôi vợ chồng trẻ trong chính căn nhà của họ.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/r/s/rsz_annabelle_comes_home_-_vietnam_-_poster_2_2_1.jpg'),
+('Home Alone', 'Hài hước, Gia đình', 103, '1990-11-16', 'Cậu bé Kevin bị bỏ lại một mình ở nhà trong kỳ nghỉ Giáng Sinh và phải lập những cái bẫy thông minh để chống lại hai tên trộm.', 'https://motchillk.bot/storage/hinh-anh/o-nha-mot-minh-thumb.jpg'),
+('Mr. Bean', 'Hài hước, Vui nhộn', 90, '1997-08-01', 'Tuyển tập những tình huống dở khóc dở cười của Mr. Bean, một người đàn ông vụng về nhưng luôn có những cách giải quyết vấn đề độc lạ.', 'https://upload.wikimedia.org/wikipedia/en/3/37/Bean_movie_poster.jpg'),
+('Rush Hour', 'Hành động, Hài hước', 98, '1998-09-18', 'Sự kết hợp hoàn hảo giữa một thám tử Hong Kong nghiêm túc và một cảnh sát Mỹ lắm mồm trong hành trình giải cứu một cô bé bị bắt cóc.', 'https://motchilll.now/wp-content/uploads/2024/12/gio-cao-diem-8987-thumb.webp'),
+('Jumanji', 'Hài hước, Phiêu lưu', 119, '1995-12-15', 'Trò chơi cờ bàn ma thuật vô tình đưa những sinh vật hoang dã nguy hiểm vào thế giới thực, buộc người chơi phải hoàn thành ván cờ để kết thúc.', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/t/r/tr_ch_i_k_o_th_ng_c_p_2.jpg');
+
+-- 3.4. THÊM ĐÁNH GIÁ (REVIEW)
+INSERT INTO DanhGia (Ma_Phim, Ten_Nguoi_Dung, Noi_Dung) VALUES 
+(1, 'Tuấn Hành Động', 'Phim xem đã mắt thực sự, kỹ xảo quá đỉnh! 10/10.'),
+(1, 'Bé Bi', 'Kong đấm nhau với Godzilla nhìn sợ quá nhưng mà hay.'),
+(2, 'Lê Văn Bom Tấn', 'Tôi yêu bạn 3000. Phim quá cảm xúc, xứng đáng là bom tấn thế kỷ!'),
+(4, 'Ngô Tạp Nham', 'Đa vũ trụ mở ra xem cuốn thực sự, Tom Holland diễn ngày càng lên tay.'),
+(5, 'Mẹ Bỉm', 'Phim Doraemon năm nay dễ thương, nhạc phim cực kỳ bắt tai, rất thích hợp cho cả gia đình đi xem.'),
+(7, 'Trần Bé Bi', 'Inside Out 2 diễn tả tâm lý tuổi dậy thì quá chuẩn, xem vừa buồn cười vừa đồng cảm.'),
+(9, 'Hoàng Lệ Rơi', 'Phim Mai khóc hết nước mắt, đạo diễn làm phim càng ngày càng chạm tới cảm xúc người xem.'),
+(10, 'Vũ Trái Tim', 'Titanic xem đi xem lại chục lần vẫn thấy hay, một kiệt tác sống mãi với thời gian!'),
+(13, 'Đinh Hù Dọa', 'Quật mộ xem rùng mình thật sự, âm thanh hình ảnh ám ảnh khủng khiếp. Ai yếu tim cân nhắc nhé.'),
+(17, 'Đỗ Tạp Nham', 'Home Alone coi dịp Giáng sinh là chuẩn bài, cười đau cả bụng từ đầu đến cuối.');
+
+-- 3.5. PHÒNG CHIẾU
+INSERT INTO Phong_Chieu (Ten_Phong, Loai_Phong, Tong_So_Ghe) VALUES 
+('Phòng 01 - IMAX', 'IMAX', 100), 
+('Phòng 02 - 3D', '3D', 80), 
+('Phòng 03 - Standard', 'Tiêu chuẩn', 100),
+('Phòng 04 - VIP', 'VIP', 50),
+('Phòng 05 - Couple', 'VIP', 40),
+('Phòng 06 - 4DX', '3D', 60),
+('Phòng 07 - Standard 2', 'Tiêu chuẩn', 100),
+('Phòng 08 - Standard 3', 'Tiêu chuẩn', 100),
+('Phòng 09 - Premium', 'VIP', 80),
+('Phòng 10 - Private', 'VIP', 20);
+
+-- 3.6. TỰ ĐỘNG TẠO GHẾ BẰNG TRUY VẤN ĐỆ QUY (Thay thế vòng lặp WHILE của SQL Server)
+INSERT INTO Ghe (Ma_Phong, So_Ghe, Loai_Ghe)
+WITH RECURSIVE 
+  rooms(p) AS (SELECT 1 UNION ALL SELECT p+1 FROM rooms WHERE p &lt; 10),
+  seats(g) AS (SELECT 1 UNION ALL SELECT g+1 FROM seats WHERE g &lt; 30)
+SELECT p, 'G' || g, 'Thường' FROM rooms, seats;
+
+-- 3.7. TỰ ĐỘNG TẠO SUẤT CHIẾU BẰNG TRUY VẤN ĐỆ QUY (Thay thế vòng lặp WHILE)
+INSERT INTO Suat_Chieu (Ma_Phim, Ma_Phong, Thoi_Gian_Bat_Dau, Gia_Ve)
+WITH RECURSIVE seq(i) AS (
+    SELECT 1 UNION ALL SELECT i + 1 FROM seq WHERE i &lt; 20
+)
+SELECT 
+    i, 
+    ((i - 1) % 10) + 1, 
+    datetime('2024-05-01 08:00:00', '+' || i || ' hours'), 
+    90000 
+FROM seq;
+
+-- 3.8. MA TRẬN VÉ 
+-- 🎯 NHÓM 1: FAN HÀNH ĐỘNG (Suất 1-4)
+INSERT INTO Ve (Ma_Suat, Ma_KH, Ma_NV, Ma_Ghe) VALUES
+(1, 1, 1, 2),   (2, 1, 1, 23),  (3, 1, 1, 1),   (4, 1, 1, 4),
+(1, 2, 1, 3),   (2, 2, 1, 24),  (3, 2, 1, 2),   (4, 2, 1, 12);
+
+-- 🎯 NHÓM 2: FAN HOẠT HÌNH (Suất 5-8)
+INSERT INTO Ve (Ma_Suat, Ma_KH, Ma_NV, Ma_Ghe) VALUES
+(5, 3, 1, 14), (6, 3, 1, 27),
+(5, 4, 1, 15), (6, 4, 1, 28), (7, 4, 1, 4),  (8, 4, 1, 16);
+
+-- 🎯 NHÓM 3: FAN TÌNH CẢM (Suất 9-12)
+INSERT INTO Ve (Ma_Suat, Ma_KH, Ma_NV, Ma_Ghe) VALUES
+(9, 5, 1, 17), (10, 5, 1, 30),
+(9, 6, 1, 18), (10, 6, 1, 5), (11, 6, 1, 19), (12, 6, 1, 6);
+
+-- 🎯 NHÓM 4: FAN KINH DỊ (Suất 13-16)
+INSERT INTO Ve (Ma_Suat, Ma_KH, Ma_NV, Ma_Ghe) VALUES
+(13, 7, 1, 21), (14, 7, 1, 8),
+(13, 8, 1, 22), (14, 8, 1, 9), (15, 8, 1, 23), (16, 8, 1, 10);
+
+-- 🎯 NHÓM 5: KHÁCH XEM TẠP NHAM (Mix)
+INSERT INTO Ve (Ma_Suat, Ma_KH, Ma_NV, Ma_Ghe) VALUES
+(1, 9, 1, 4), (5, 9, 1, 5), (9, 9, 1, 6), (13, 9, 1, 7), (17, 9, 1, 8),
+(2, 10, 1, 25), (6, 10, 1, 26), (10, 10, 1, 27), (14, 10, 1, 28), (18, 10, 1, 29);</sql><current_tab id="0"/></tab_sql></sqlb_project>

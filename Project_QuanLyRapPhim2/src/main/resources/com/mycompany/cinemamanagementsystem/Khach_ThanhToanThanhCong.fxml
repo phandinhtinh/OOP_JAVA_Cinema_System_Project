@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="khungChinh" alignment="CENTER" prefHeight="700.0" prefWidth="1000.0" spacing="25.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.cinemamanagementsystem.Khach_ThanhToanThanhCongController">
+   <children>
+      <Label text="✔" textFill="#4cff4c">
+         <font>
+            <Font name="System Bold" size="120.0" />
+         </font>
+      </Label>
+      
+      <Label text="THANH TOÁN THÀNH CÔNG!" textFill="#4cff4c">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Label>
+      
+      <Label text="Cảm ơn bạn đã đặt vé. Chúc bạn có một trải nghiệm xem phim tuyệt vời!" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      
+      <Button fx:id="btnVeTrangChu" mnemonicParsing="false" onAction="#veTrangChu" style="-fx-background-color: #e50914; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 25; -fx-cursor: hand;" text="VỀ TRANG CHÍNH">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <padding>
+            <Insets bottom="15.0" left="50.0" right="50.0" top="15.0" />
+         </padding>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Button>
+
+      <ProgressIndicator fx:id="vongLoad" visible="false" />
+   </children>
+</VBox>
